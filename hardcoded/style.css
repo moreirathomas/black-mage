@@ -1,0 +1,25 @@
+.blackmage{
+    display: block;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    transform: scale(2);
+}
+.blackmage>div{
+    position: absolute;
+}
+.black{
+    background-color: #000000;
+}
+.blue{
+    background-color: #33ccff;
+}
+.orange{
+    background-color: #fe9a33;
+}
+.greenish{
+    background-color: #808000;
+}
