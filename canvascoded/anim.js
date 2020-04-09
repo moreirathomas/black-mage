@@ -58,6 +58,13 @@
     y: 40,
     x_velocity: 4,
   };
+  let fireblast = {
+    animation: new Animation(),
+    height: 26,
+    width: 26,
+    x: SPRITE_SIZE,
+    y: 40,
+  };
 
   const mage_sprite_sheet = {
     frame_sets: [[0], [1, 2], [3]],
@@ -65,6 +72,10 @@
   };
   const fireball_sprite_sheet = {
     frame_sets: [[0]],
+    image: new Image(),
+  };
+  const fireblast_sprite_sheet = {
+    frame_sets: [[0, 2, 3]],
     image: new Image(),
   };
 
@@ -83,7 +94,8 @@
     },
   };
 
-  let fireball_cast = false; // need to have it outside else set back to false at each loop
+  // let fireball_cast = false; // need to have it outside else set back to false at each loop
+  let fireblast_cast = false;
 
   const loop = function () {
     // buffer.clearRect(0, 0, buffer.canvas.width, buffer.canvas.height);
@@ -100,24 +112,33 @@
     // cast then sleep for .5sec and idle + FIREBALL !
     if (!controller.down.active && controller.up.active) {
       mage.animation.change(mage_sprite_sheet.frame_sets[2]);
-      fireball.animation.change(fireball_sprite_sheet.frame_sets[0]);
-      fireball_cast = true;
-
-      (async function revertIdle() {
+      // fireball.animation.change(fireball_sprite_sheet.frame_sets[0]);
+      fireblast.animation.change(fireblast_sprite_sheet.frame_sets[0], 20);
+      // fireball_cast = true;
+      fireblast_cast = true;
+      (async () => {
         await sleep(500);
         controller.up.active = false;
       })();
     }
-    console.log(fireball_cast);
     mage.animation.update();
-    if (fireball_cast) {
-      fireball.x += fireball.x_velocity;
-      if (fireball.x > canvas.width) {
-        fireball_cast = false;
-        fireball.x = SPRITE_SIZE;
-      }
-      fireball.animation.update();
-      render_fireball();
+    console.log(fireblast_cast);
+    if (fireblast_cast) {
+      // fireball.x += fireball.x_velocity;
+      // if (fireball.x > canvas.width * 0.5) {
+      //   fireball_cast = false;
+      //   fireball.x = SPRITE_SIZE;
+      // }
+      // fireball.animation.update();
+      // render_fireball();
+
+      fireblast.animation.update();
+      render_fireblast();
+
+      (async () => {
+        await sleep(900);
+        fireblast_cast = false;
+      })();
     }
     render();
     window.requestAnimationFrame(loop);
@@ -176,6 +197,20 @@
     );
   };
 
+  const render_fireblast = function () {
+    context.drawImage(
+      fireblast_sprite_sheet.image,
+      fireblast.animation.frame * SPRITE_SIZE,
+      0,
+      SPRITE_SIZE,
+      SPRITE_SIZE,
+      Math.floor(fireball.x),
+      Math.floor(fireball.y),
+      SPRITE_SIZE,
+      SPRITE_SIZE
+    );
+  };
+
   const resize = function () {
     // display.canvas.width = document.documentElement.clientWidth - 32;
 
@@ -217,4 +252,5 @@
 
   mage_sprite_sheet.image.src = '../src/mage.png';
   fireball_sprite_sheet.image.src = '../src/fireball.png';
+  fireblast_sprite_sheet.image.src = '../src/fireblast.png';
 })();
